@@ -1,0 +1,19 @@
+local websocket = require("websocket")
+
+function init(self)
+	local wsc = websocket.client.new({timeout=2})
+	
+	local ok, err = wsc:connect('ws://echo.websocket.org', 'echo')
+	if not ok then
+		print('could not connect', err)
+		return
+	end
+	
+	local ok, was_clean, code, reason = wsc:send('sending to echo server')
+	print("send", ok, was_clean, code, reason)
+	
+	local message, opcode, was_clean, code, reason = wsc:receive()
+	print("rcve", message, opcode, was_clean, code, reason)
+	
+	wsc:close()
+end
